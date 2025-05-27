@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.menuLateral')
 
 @section('content')
 <h1>Login</h1>

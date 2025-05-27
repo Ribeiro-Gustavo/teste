@@ -118,28 +118,38 @@
 
 <header>
     @auth
-    <div class="left-header">
-        <button class="menu-button" onclick="toggleSidebar()">☰</button>
-    </div>
+        <div class="left-header">
+            <button class="menu-button" onclick="toggleSidebar()">☰</button>
+        </div>
 
-    <div class="right-header">
-        <!-- Botão do carrinho -->
-        <button class="carrinho-button" onclick="toggleCarrinhoModal()">🛒</button>
+        <div class="right-header">
+            <!-- Botão do carrinho -->
+            <button class="carrinho-button" onclick="toggleCarrinhoModal()">🛒</button>
 
-        <!-- Botão de logout -->
-        <form class="logout-form" action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit">Sair</button>
-        </form>
-    </div>
+            <!-- Botão de logout -->
+            <form class="logout-form" action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">Sair</button>
+            </form>
+        </div>
     @endauth
+
+    @guest
+        <div class="right-header" style="text-align: right; padding: 10px;">
+            <a href="{{ route('login') }}" style="text-decoration: none; background: #333; color: white; padding: 8px 12px; border-radius: 5px;">
+                Login
+            </a>
+        </div>
+    @endguest
 </header>
+
 
 <!-- Menu lateral -->
 <div id="sidebar" class="sidebar">
     <a href="javascript:void(0)" onclick="toggleSidebar()">✕ Fechar</a>
     <a href="{{ route('dashboard') }}">Dashboard</a>
-    <a href="{{ route('alimentos.index') }}">Alimentos</a>
+    <a href="{{ route('cardapios.index') }}">Cardapios</a>
+    <a href="{{ route('sobre') }}">Sobre</a>
     <!-- Adicione mais páginas aqui -->
 </div>
 

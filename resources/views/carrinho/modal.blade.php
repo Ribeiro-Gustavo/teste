@@ -27,7 +27,44 @@
                 Limpar Carrinho
             </button>
         </form>
+
+        <button onclick="abrirFinalizarPedidoModal()" style="background: green; color: white; padding: 8px 15px; border: none; margin-top: 10px; cursor: pointer;">
+            Finalizar Pedido
+        </button>
     @else
         <p>Carrinho vazio.</p>
     @endif
 </div>
+
+<!-- MODAL DE FINALIZAR PEDIDO (inserido fora do carrinhoModal) -->
+<div id="finalizarPedidoModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; border: 1px solid #ccc; padding: 20px; width: 400px; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 9999;">
+    
+    <h3>Resumo do Pedido</h3>
+    <ul style="list-style: none; padding: 0;">
+        @php $total = 0; @endphp
+        @foreach($carrinho as $item)
+            @php
+                $subtotal = $item['preco'] * $item['quantidade'];
+                $total += $subtotal;
+            @endphp
+            <li>{{ $item['nome'] }} ({{ $item['quantidade'] }}x) - R$ {{ number_format($subtotal, 2, ',', '.') }}</li>
+        @endforeach
+    </ul>
+    
+    <p><strong>Total:</strong> R$ {{ number_format($total, 2, ',', '.') }}</p>
+    
+    <button onclick="fecharFinalizarPedidoModal()" style="margin-top: 15px; background: red; color: white; border: none; padding: 8px 15px; cursor: pointer;">
+        Fechar
+    </button>
+</div>
+
+<script>
+    function abrirFinalizarPedidoModal() {
+        document.getElementById('finalizarPedidoModal').style.display = 'block';
+    }
+
+    function fecharFinalizarPedidoModal() {
+        document.getElementById('finalizarPedidoModal').style.display = 'none';
+    }
+</script>

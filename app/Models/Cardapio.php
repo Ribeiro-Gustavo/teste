@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Alimento extends Model
+class Cardapio extends Model
 {
 use HasFactory;
 
-protected $fillable = ['nome', 'quantidade', 'validade'];
+    protected $fillable = ['nome', 'quantidade', 'preco', 'descricao', 'imagem'];
 }

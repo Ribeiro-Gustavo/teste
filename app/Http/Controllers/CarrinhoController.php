@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Alimento;
+use App\Models\Cardapio;
 
 class CarrinhoController extends Controller
 {
     public function adicionar(Request $request, $id)
     {
-        $alimento = Alimento::findOrFail($id);
+        $cardapio = Cardapio::findOrFail($id);
         $carrinho = session()->get('carrinho', []);
 
         if (isset($carrinho[$id])) {
             $carrinho[$id]['quantidade']++;
         } else {
             $carrinho[$id] = [
-                'nome' => $alimento->nome,
+                'nome' => $cardapio->nome,
                 'quantidade' => 1,
-                'validade' => $alimento->validade,
+                'validade' => $cardapio->validade,
             ];
         }
 
