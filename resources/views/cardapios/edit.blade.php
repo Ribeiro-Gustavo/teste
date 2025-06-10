@@ -39,7 +39,7 @@
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">
             <div class="p-8">
-                <form action="{{ route('cardapios.update', $cardapio) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('cardapios.update', $cardapio) }}" method="POST" enctype="multipart/form-data" class="space-y-6" id="form-produto">
                     @csrf
                     @method('PUT')
 
@@ -52,9 +52,10 @@
                                id="nome"
                                name="nome"
                                value="{{ old('nome', $cardapio->nome) }}"
-                               maxlength="25"
+                               maxlength="20"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
+                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               placeholder="Nome do produto (máx 20 caracteres)">
                     </div>
 
                     <!-- Quantidade -->
@@ -67,8 +68,11 @@
                                name="quantidade"
                                value="{{ old('quantidade', $cardapio->quantidade) }}"
                                min="0"
+                               max="1000"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
+                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               placeholder="Máximo 1000 unidades">
+                        <p class="text-gray-400 text-sm mt-1">Quantidade máxima: 1000</p>
                     </div>
 
                     <!-- Preço -->
@@ -76,14 +80,13 @@
                         <label for="preco" class="block text-sm font-medium text-gray-300 mb-2">
                             <i class="fas fa-dollar-sign mr-2 text-primary-500"></i>Preço (R$)
                         </label>
-                        <input type="number"
+                        <input type="text"
                                id="preco"
                                name="preco"
-                               value="{{ old('preco', $cardapio->preco) }}"
-                               step="0.01"
-                               min="0"
+                               value="{{ old('preco', number_format($cardapio->preco, 2, ',', '.')) }}"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
+                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               placeholder="R$ 0,00">
                     </div>
 
                     <!-- Descrição -->
@@ -93,11 +96,12 @@
                         </label>
                         <textarea id="descricao"
                                   name="descricao"
-                                  maxlength="125"
+                                  maxlength="100"
                                   rows="4"
                                   required
-                                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none">{{ old('descricao', $cardapio->descricao) }}</textarea>
-                        <p class="text-gray-400 text-sm mt-1">Máximo 125 caracteres</p>
+                                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none"
+                                  placeholder="Descrição do produto (máx 100 caracteres)">{{ old('descricao', $cardapio->descricao) }}</textarea>
+                        <p class="text-gray-400 text-sm mt-1">Máximo 100 caracteres</p>
                     </div>
 
                     <!-- Imagem Atual -->
@@ -142,4 +146,31 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('#preco').mask('000.000.000.000.000,00', {reverse: true});
+
+    $('#quantidade').on('input', function() {
+        let val = parseInt($(this).val());
+        if(val > 1000){
+            $(this).val(1000);
+        } else if(val < 0 || isNaN(val)) {
+            $(this).val(0);
+        }
+    });
+
+    $('#nome').on('input', function() {
+        if($(this).val().length > 20){
+            $(this).val($(this).val().substr(0, 20));
+        }
+    });
+
+
+});
+</script>
+
 @endsection

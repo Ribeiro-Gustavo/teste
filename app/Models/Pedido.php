@@ -17,7 +17,7 @@ class Pedido extends Model
         'horario_entrega',
         'observacoes',
         'status',
-        'total',
+        'total'
     ];
 
     public function user()
@@ -25,7 +25,7 @@ class Pedido extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function items()
+    public function itens()
     {
         return $this->hasMany(PedidoItem::class);
     }

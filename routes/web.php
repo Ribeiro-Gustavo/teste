@@ -9,18 +9,18 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\DashboardController;
 
 // Rotas públicas de autenticação
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rota publica de dashboard
 Route::get('/sobre', function () {
     return view('sobre'); // Crie esse Blade se quiser
 })->name('sobre');
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [CardapioController::class, 'index'])->name('home');
 
 
 // registro
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
 // Rota protegida de dashboard
@@ -37,11 +37,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // Carrinho (RESTful para testes e AJAX)
-Route::middleware('auth')->group(function () {
-    Route::post('/carrinho/adicionar/{id?}', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
-    Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
-    Route::delete('/carrinho/limpar', [CarrinhoController::class, 'limpar'])->name('carrinho.limpar');
-});
+Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.index');
+Route::post('/carrinho/adicionar/{id}', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
+Route::delete('/carrinho/limpar', [CarrinhoController::class, 'limpar'])->name('carrinho.limpar');
 
 // Perfil
 Route::middleware('auth')->group(function () {
@@ -67,7 +66,8 @@ Route::middleware('auth')->group(function () {
 
 // Pedidos
 Route::middleware('auth')->group(function () {
-    Route::post('/pedidos/finalizar', [PedidoController::class, 'processOrder'])->name('pedidos.finalizar');
+    Route::post('/pedidos/finalizar', [PedidoController::class, 'finalizar'])->name('pedidos.finalizar');
+    Route::get('/pedidos/confirmacao/{id}', [PedidoController::class, 'confirmacao'])->name('pedidos.confirmacao');
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
     Route::get('/pedidos/{pedido}', [PedidoController::class, 'show'])->name('pedidos.show');
     Route::put('/pedidos/{pedido}/cancelar', [PedidoController::class, 'cancel'])->name('pedidos.cancelar');

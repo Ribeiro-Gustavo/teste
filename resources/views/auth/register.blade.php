@@ -83,8 +83,10 @@
                         </label>
                         <input type="text"
                                name="telefone"
+                               id="telefone"
                                value="{{ old('telefone') }}"
                                required
+                               maxlength="55"
                                class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                                style="background-color:#222222; border:1px solid #333333;"
                                placeholder="(00) 00000-0000">
@@ -137,5 +139,112 @@
         </div>
     </div>
 </div>
-@endsection
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Máscara para telefone
+        $('#telefone').mask('(00) 00000-0000');
+
+        // Validação para nome
+        $('input[name="name"]').on('input', function() {
+            let val = $(this).val();
+            // Remove números e caracteres especiais
+            val = val.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+            if(val.length > 150) {
+                val = val.substr(0, 150);
+                alert('Nome atingiu o limite máximo de 150 caracteres');
+            }
+            $(this).val(val);
+        });
+
+        // Validação para email
+        $('input[name="email"]').on('input', function() {
+            let val = $(this).val();
+            if(val.length > 150) {
+                val = val.substr(0, 150);
+                alert('Email atingiu o limite máximo de 150 caracteres');
+            }
+            $(this).val(val);
+        });
+
+        // Validação para senha
+        $('input[name="password"]').on('input', function() {
+            let val = $(this).val();
+            if(val.length > 255) {
+                val = val.substr(0, 255);
+                alert('Senha atingiu o limite máximo de caracteres');
+            }
+            $(this).val(val);
+        });
+
+        // Validação para confirmação de senha
+        $('input[name="password_confirmation"]').on('input', function() {
+            let val = $(this).val();
+            if(val.length > 255) {
+                val = val.substr(0, 255);
+                alert('Senha atingiu o limite máximo de caracteres');
+            }
+            $(this).val(val);
+        });
+
+        // Previne submissão do formulário se houver erros
+        $('form').on('submit', function(e) {
+            let hasError = false;
+            
+            // Validação do nome
+            const name = $('input[name="name"]').val().trim();
+            if(name.length < 3) {
+                alert('O nome deve ter pelo menos 3 caracteres');
+                hasError = true;
+            }
+
+            // Validação do email
+            const email = $('input[name="email"]').val().trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)) {
+                alert('Por favor, insira um email válido');
+                hasError = true;
+            }
+
+            // Validação do telefone
+            const telefone = $('#telefone').val().trim();
+            if(telefone.length < 14) { // (00) 00000-0000
+                alert('Por favor, insira um telefone válido');
+                hasError = true;
+            }
+
+            // Validação da senha
+            const password = $('input[name="password"]').val();
+            if(password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres');
+                hasError = true;
+            }
+
+            // Validação da força da senha
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            
+            if(!hasUpperCase || !hasLowerCase || !hasNumbers) {
+                alert('A senha deve conter pelo menos uma letra maiúscula, uma minúscula e um número');
+                hasError = true;
+            }
+
+            // Validação da confirmação de senha
+            const passwordConfirmation = $('input[name="password_confirmation"]').val();
+            if(password !== passwordConfirmation) {
+                alert('As senhas não coincidem');
+                hasError = true;
+            }
+
+            if(hasError) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+
+@endsection

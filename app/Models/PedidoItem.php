@@ -13,7 +13,8 @@ class PedidoItem extends Model
         'pedido_id',
         'cardapio_id',
         'quantidade',
-        'preco_unitario'
+        'preco_unitario',
+        'subtotal'
     ];
 
     public function pedido()

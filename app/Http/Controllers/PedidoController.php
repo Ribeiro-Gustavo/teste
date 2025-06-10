@@ -8,61 +8,107 @@ use App\Models\PedidoItem;
 use App\Models\Cardapio;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class PedidoController extends Controller
 {
-    public function processOrder(Request $request)
+    public function finalizar(Request $request)
     {
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $request->validate([
             'nome_cliente' => 'required|string|max:255',
-            'telefone_cliente' => ['required', 'string', 'min:10', 'max:20', 'regex:/^\\d[\\d\\s\\(\\)\\-+\\.]+$/'],
+            'telefone_cliente' => 'required|string|max:20',
             'endereco_entrega' => 'required|string|max:255',
-            'horario_entrega' => 'required|string|max:50',
-            'observacoes' => 'nullable|string|max:500',
+            'horario_entrega' => 'required|date_format:H:i',
+            'observacoes' => 'nullable|string|max:1000'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = Auth::user();
-        $carrinho = Session::get('carrinho', []);
-
+        $carrinho = session()->get(Auth::check() ? 'carrinho_' . Auth::id() : 'carrinho_guest', []);
+        
         if (empty($carrinho)) {
-            return response()->json(['errors' => ['itens' => ['Seu carrinho está vazio.']]], 422);
+            return response()->json(['error' => 'O carrinho está vazio!'], 422);
         }
 
-        // Criar o pedido
-        $pedido = Pedido::create([
-            'user_id' => $user->id,
-            'nome_cliente' => $request->input('nome_cliente'),
-            'telefone_cliente' => $request->input('telefone_cliente'),
-            'endereco_entrega' => $request->input('endereco_entrega'),
-            'horario_entrega' => $request->input('horario_entrega'),
-            'observacoes' => $request->input('observacoes'),
-            'status' => 'pendente',
-            'total' => 0,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $totalPedido = 0;
-        foreach ($carrinho as $cardapio_id => $item) {
-            PedidoItem::create([
-                'pedido_id' => $pedido->id,
-                'cardapio_id' => $cardapio_id,
-                'quantidade' => $item['quantidade'],
-                'preco_unitario' => $item['preco'],
+            $pedido = new Pedido();
+            $pedido->user_id = Auth::id();
+            $pedido->nome_cliente = $request->nome_cliente;
+            $pedido->telefone_cliente = $request->telefone_cliente;
+            $pedido->endereco_entrega = $request->endereco_entrega;
+            $pedido->horario_entrega = $request->horario_entrega;
+            $pedido->observacoes = $request->observacoes;
+            $pedido->status = 'pendente';
+            $pedido->total = 0;
+            $pedido->save();
+
+            $total = 0;
+            $itens = [];
+            foreach ($carrinho as $id => $item) {
+                $pedidoItem = new PedidoItem();
+                $pedidoItem->pedido_id = $pedido->id;
+                $pedidoItem->cardapio_id = $id;
+                $pedidoItem->quantidade = $item['quantidade'];
+                $pedidoItem->preco_unitario = $item['preco'];
+                $pedidoItem->subtotal = $item['preco'] * $item['quantidade'];
+                $pedidoItem->save();
+
+                $total += $pedidoItem->subtotal;
+
+                $itens[] = [
+                    'nome' => $item['nome'],
+                    'quantidade' => $item['quantidade'],
+                    'preco_unitario' => number_format($item['preco'], 2, ',', '.'),
+                    'subtotal' => number_format($pedidoItem->subtotal, 2, ',', '.')
+                ];
+            }
+
+            $pedido->total = $total;
+            $pedido->save();
+
+            DB::commit();
+
+            // Limpa o carrinho após finalizar o pedido
+            session()->forget(Auth::check() ? 'carrinho_' . Auth::id() : 'carrinho_guest');
+
+            // Retorna os dados do pedido para o modal de confirmação
+            return response()->json([
+                'success' => true,
+                'message' => 'Pedido realizado com sucesso!',
+                'pedido' => [
+                    'id' => $pedido->id,
+                    'nome_cliente' => $pedido->nome_cliente,
+                    'telefone_cliente' => $pedido->telefone_cliente,
+                    'endereco_entrega' => $pedido->endereco_entrega,
+                    'horario_entrega' => $pedido->horario_entrega,
+                    'observacoes' => $pedido->observacoes,
+                    'total' => number_format($pedido->total, 2, ',', '.'),
+                    'itens' => $itens
+                ]
             ]);
-            $totalPedido += $item['preco'] * $item['quantidade'];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Erro ao finalizar pedido. Por favor, tente novamente.'], 500);
         }
+    }
 
-        // Atualizar o total do pedido
-        $pedido->total = $totalPedido;
-        $pedido->save();
+    public function confirmacao($id)
+    {
+        $pedido = Pedido::with('itens.cardapio')->findOrFail($id);
+        return view('pedidos.confirmacao', compact('pedido'));
+    }
 
-        // Limpar o carrinho da sessão
-        Session::forget('carrinho');
-
-        return response()->json(['message' => 'Pedido criado com sucesso', 'pedido_id' => $pedido->id], 201);
+    public function index()
+    {
+        $pedidos = Pedido::with('itens.cardapio')
+                        ->when(Auth::check(), function($query) {
+                            return $query->where('user_id', Auth::id());
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        
+        return view('pedidos.index', compact('pedidos'));
     }
 
     public function showOrderConfirmation(Pedido $pedido)
@@ -75,12 +121,6 @@ class PedidoController extends Controller
         }
         $pedido->load('items.cardapio');
         return response()->json(['data' => $pedido], 200);
-    }
-
-    public function index()
-    {
-        $pedidos = Auth::user()->pedidos()->with('items.cardapio')->get();
-        return response()->json(['data' => $pedidos], 200);
     }
 
     public function show(Pedido $pedido)

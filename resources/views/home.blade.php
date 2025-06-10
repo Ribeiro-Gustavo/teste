@@ -1,34 +1,75 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<h1 style="text-align:center; margin-bottom: 30px;">Nosso Cardápio</h1>
-
-@if(session('sucesso'))
-    <p style="color: green; text-align:center;">{{ session('sucesso') }}</p>
-@endif
-
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-    @foreach($cardapios as $cardapio)
-    <div style="border: 1px solid #ccc; border-radius: 8px; width: 30%; box-sizing: border-box; padding: 15px; text-align: center;">
-        @if($cardapio->imagem)
-            <img src="{{ asset('storage/' . $cardapio->imagem) }}" alt="{{ $cardapio->nome }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
-        @else
-            <div style="width: 100%; height: 180px; background-color: #eee; display: flex; align-items: center; justify-content: center; color: #999; border-radius: 5px;">
-                Sem imagem
-            </div>
-        @endif
-
-        <h3 style="margin: 15px 0 10px;">{{ $cardapio->nome }}</h3>
-        <p style="min-height: 60px;">{{ $cardapio->descricao }}</p>
-        <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">R$ {{ number_format($cardapio->preco, 2, ',', '.') }}</p>
-
-        <form action="{{ route('carrinho.adicionar', $cardapio->id) }}" method="POST">
-            @csrf
-            <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                Adicionar ao Carrinho
-            </button>
-        </form>
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-white">Cardápio</h1>
     </div>
-    @endforeach
+
+    <!-- Lista de Produtos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($cardapios as $cardapio)
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                <div class="relative">
+                    @if($cardapio->imagem)
+                        <img src="{{ asset('storage/' . $cardapio->imagem) }}" alt="{{ $cardapio->nome }}" class="w-full h-48 object-cover">
+                    @else
+                        <div class="w-full h-48 bg-gray-700 flex items-center justify-center">
+                            <i class="fas fa-utensils text-4xl text-gray-500"></i>
+                        </div>
+                    @endif
+                    <div class="absolute top-2 right-2">
+                        <span class="bg-primary-600 text-white px-2 py-1 rounded-full text-sm">
+                            R$ {{ number_format($cardapio->preco, 2, ',', '.') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-white mb-2">{{ $cardapio->nome }}</h3>
+                    <p class="text-gray-400 mb-4">{{ $cardapio->descricao }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-clock mr-1"></i>
+                            {{ $cardapio->tempo_preparo }} min
+                        </span>
+                        <form action="{{ route('carrinho.adicionar', $cardapio->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-plus mr-2"></i>Adicionar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
+
+<script>
+function toggleCarrinho() {
+    const modal = document.getElementById('carrinhoModal');
+    modal.classList.toggle('hidden');
+}
+
+// Máscara para telefone
+document.addEventListener('DOMContentLoaded', function() {
+    const telefoneInput = document.getElementById('telefone_cliente');
+    if (telefoneInput) {
+        telefoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 2) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            }
+            if (value.length > 9) {
+                value = `${value.slice(0, 9)}-${value.slice(9)}`;
+            }
+            
+            e.target.value = value;
+        });
+    }
+});
+</script>
 @endsection

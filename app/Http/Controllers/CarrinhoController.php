@@ -5,75 +5,64 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cardapio;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CarrinhoController extends Controller
 {
-    // Adiciona item ao carrinho (JSON ou Form)
-    public function adicionar(Request $request, $id = null)
+    private function getCarrinhoKey()
     {
-        // Se o ID vier da URL, usa ele
-        $cardapio_id = $id ?? $request->input('cardapio_id');
+        return Auth::check() ? 'carrinho_' . Auth::id() : 'carrinho_guest';
+    }
+
+    // Adiciona item ao carrinho (JSON ou Form)
+    public function adicionar(Request $request, $id)
+    {
+        $cardapio = Cardapio::findOrFail($id);
         $quantidade = $request->input('quantidade', 1);
-
-        $validator = Validator::make([
-            'cardapio_id' => $cardapio_id,
-            'quantidade' => $quantidade
-        ], [
-            'cardapio_id' => 'required|exists:cardapios,id',
-            'quantidade' => 'required|integer|min:1',
-        ]);
-
-        if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $cardapio = Cardapio::find($cardapio_id);
-
-        if ($quantidade > $cardapio->quantidade) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => ['quantidade' => ['Quantidade maior que o estoque']]], 422);
-            }
-            return back()->withErrors(['quantidade' => 'Quantidade maior que o estoque'])->withInput();
-        }
-
-        $carrinho = session()->get('carrinho', []);
-        if (isset($carrinho[$cardapio->id])) {
-            $carrinho[$cardapio->id]['quantidade'] += $quantidade;
+        
+        $carrinho = session()->get($this->getCarrinhoKey(), []);
+        
+        if(isset($carrinho[$id])) {
+            $carrinho[$id]['quantidade'] += $quantidade;
         } else {
-            $carrinho[$cardapio->id] = [
+            $carrinho[$id] = [
                 'nome' => $cardapio->nome,
                 'quantidade' => $quantidade,
-                'validade' => $cardapio->validade,
                 'preco' => $cardapio->preco,
+                'imagem' => $cardapio->imagem
             ];
         }
-        session()->put('carrinho', $carrinho);
-
-        if ($request->expectsJson()) {
-            return response()->json(['message' => 'Item adicionado ao carrinho'], 200);
-        }
-        return back()->with('sucesso', 'Item adicionado ao carrinho');
+        
+        session()->put($this->getCarrinhoKey(), $carrinho);
+        
+        return redirect()->back()->with('sucesso', 'Item adicionado ao carrinho!');
     }
 
-    // Remove item do carrinho (JSON)
+    // Remove item do carrinho
     public function remover($id)
     {
-        $carrinho = session()->get('carrinho', []);
-        if (isset($carrinho[$id])) {
+        $carrinho = session()->get($this->getCarrinhoKey(), []);
+        
+        if(isset($carrinho[$id])) {
             unset($carrinho[$id]);
-            session()->put('carrinho', $carrinho);
-            return response()->json(['message' => 'Item removido do carrinho'], 200);
+            session()->put($this->getCarrinhoKey(), $carrinho);
+            return redirect()->back()->with('sucesso', 'Item removido do carrinho!');
         }
-        return response()->json(['errors' => ['item' => ['Item não encontrado no carrinho']]], 404);
+        
+        return redirect()->back()->with('erro', 'Item não encontrado no carrinho!');
     }
 
-    // Limpa o carrinho (JSON)
+    // Limpa o carrinho
     public function limpar()
     {
-        session()->forget('carrinho');
-        return response()->json(['message' => 'Carrinho limpo com sucesso'], 200);
+        session()->forget($this->getCarrinhoKey());
+        return redirect()->back()->with('sucesso', 'Carrinho limpo com sucesso!');
+    }
+
+    // Mostra o carrinho
+    public function index()
+    {
+        $carrinho = session()->get($this->getCarrinhoKey(), []);
+        return view('carrinho.index', compact('carrinho'));
     }
 }
