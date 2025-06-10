@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\CarrinhoController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PedidoController;
 
 // Rotas públicas de autenticação
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
@@ -41,6 +42,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/cardapios/{cardapio}/edit', [CardapioController::class, 'edit'])->name('cardapios.edit');
     Route::put('/cardapios/{cardapio}', [CardapioController::class, 'update'])->name('cardapios.update');
     Route::delete('/cardapios/{cardapio}', [CardapioController::class, 'destroy'])->name('cardapios.destroy');
+
+    // Rotas de Pedidos (Finalização) - Processadas via modal agora
+    Route::post('/pedidos/finalizar', [PedidoController::class, 'processOrder'])->name('pedidos.finalizar');
+    Route::get('/pedidos/confirmacao/{pedido}', [PedidoController::class, 'showOrderConfirmation'])->name('pedidos.confirmacao');
 });
 
 // Carrinho

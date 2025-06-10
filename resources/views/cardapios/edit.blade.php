@@ -17,6 +17,24 @@
         </div>
     </div>
 
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            <div class="bg-red-600 border border-red-500 text-white px-4 py-3 rounded-lg shadow-lg">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                    <div>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Form -->
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">

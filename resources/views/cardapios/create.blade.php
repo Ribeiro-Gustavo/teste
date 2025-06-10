@@ -1,7 +1,7 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<div class="min-h-screen" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #111111 100%);">
+<div class="min-h-screen" style="background-color:#111111;">
     <!-- Header -->
     <div class="py-12" style="background: linear-gradient(90deg, #f97316 0%, #c2410c 100%);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,9 +17,27 @@
         </div>
     </div>
 
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            <div class="bg-red-600 border border-red-500 text-white px-4 py-3 rounded-lg shadow-lg">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                    <div>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Form -->
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">
+        <div class="rounded-xl shadow-2xl overflow-hidden" style="background-color:#181818; border:1px solid #222222;">
             <div class="p-8">
                 <form action="{{ route('cardapios.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
@@ -32,9 +50,11 @@
                         <input type="text"
                                id="nome"
                                name="nome"
+                               value="{{ old('nome') }}"
                                maxlength="25"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               style="background-color:#222222; border:1px solid #333333;"
                                placeholder="Ex: Hambúrguer Artesanal">
                     </div>
 
@@ -46,9 +66,11 @@
                         <input type="number"
                                id="quantidade"
                                name="quantidade"
+                               value="{{ old('quantidade') }}"
                                min="0"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               style="background-color:#222222; border:1px solid #333333;"
                                placeholder="0">
                     </div>
 
@@ -60,10 +82,12 @@
                         <input type="number"
                                id="preco"
                                name="preco"
+                               value="{{ old('preco') }}"
                                step="0.01"
                                min="0"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                               style="background-color:#222222; border:1px solid #333333;"
                                placeholder="0.00">
                     </div>
 
@@ -77,8 +101,9 @@
                                   maxlength="125"
                                   rows="4"
                                   required
-                                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none"
-                                  placeholder="Descreva os ingredientes e características do produto..."></textarea>
+                                  class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none"
+                                  style="background-color:#222222; border:1px solid #333333;"
+                                  placeholder="Descreva os ingredientes e características do produto...">{{ old('descricao') }}</textarea>
                         <p class="text-gray-400 text-sm mt-1">Máximo 125 caracteres</p>
                     </div>
 
@@ -93,17 +118,21 @@
                                    name="imagem"
                                    accept="image/jpeg,image/png,image/webp"
                                    required
-                                   class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-600 file:text-white file:cursor-pointer hover:file:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
+                                   class="w-full px-4 py-3 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-white file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                                   style="background-color:#222222; border:1px solid #333333; file-background-color:#f97316; hover:file-background-color:#ea580c;"
+                                   placeholder="Escolha uma imagem">
                         </div>
                         <p class="text-gray-400 text-sm mt-1">Formatos aceitos: JPG, JPEG, PNG, WEBP. Não são permitidos GIFs ou vídeos.</p>
                     </div>
 
                     <!-- Buttons -->
                     <div class="flex space-x-4 pt-6">
-                        <a href="{{ route('cardapios.index') }}" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 text-center">
+                        <a href="{{ route('cardapios.index') }}" class="flex-1 font-semibold py-3 px-6 rounded-lg transition-colors duration-200 text-center"
+                           style="background-color:#222222; hover:background-color:#333333; color:#ffffff;">
                             <i class="fas fa-times mr-2"></i>Cancelar
                         </a>
-                        <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                        <button type="submit" class="flex-1 font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                                style="background-color:#f97316; hover:background-color:#ea580c; color:#ffffff;">
                             <i class="fas fa-save mr-2"></i>Salvar Produto
                         </button>
                     </div>

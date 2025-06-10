@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('pendente');
-            $table->decimal('valor_total', 10, 2);
+            $table->decimal('total', 8, 2);
             $table->string('endereco_entrega');
             $table->text('observacoes')->nullable();
             $table->timestamps();

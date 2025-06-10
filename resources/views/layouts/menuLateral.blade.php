@@ -43,7 +43,9 @@
                         <button onclick="toggleSidebar()" style="color:#bdbdbd;" class="hover:text-white focus:outline-none focus:text-white transition-colors duration-200">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
+                        </a>
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -86,7 +88,9 @@
 
                 @guest
                     <div class="flex items-center space-x-4">
-                        <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
+                        </a>
                     </div>
                     <div class="flex items-center space-x-4">
                         <a href="{{ route('login') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
@@ -129,8 +133,8 @@
     </main>
 
     <!-- Modal do Carrinho -->
-    <div id="carrinhoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-hidden border" style="background-color:#181818; border:1px solid #222222;">
+    <div id="carrinhoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end p-4">
+        <div class="rounded-lg shadow-xl max-w-lg w-full max-h-screen overflow-y-auto border" style="background-color:#181818; border:1px solid #222222;">
             <div class="flex items-center justify-between p-4 border-b" style="border-bottom:1px solid #222222;">
                 <h3 class="text-lg font-semibold text-white">
                     <i class="fas fa-shopping-cart mr-2 text-primary-500"></i>Carrinho
@@ -140,7 +144,23 @@
                 </button>
             </div>
 
-            <div class="p-4 overflow-y-auto max-h-64">
+            <div class="p-4">
+                <!-- Mensagens de Erro de Validação -->
+                @if ($errors->any())
+                    <div class="bg-red-600 border border-red-500 text-white px-4 py-3 rounded-lg shadow-lg mb-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                            <div>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @php $carrinho = session('carrinho', []); @endphp
 
                 @if(count($carrinho) > 0)
@@ -151,7 +171,7 @@
                                 $subtotal = $item['preco'] * $item['quantidade'];
                                 $total += $subtotal;
                             @endphp
-                            <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg" style="background-color:#222222;">
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color:#222222;">
                                 <div class="flex-1">
                                     <h4 class="font-medium text-white">{{ $item['nome'] }}</h4>
                                     <p class="text-sm" style="color:#bdbdbd;">{{ $item['quantidade'] }}x - R$ {{ number_format($subtotal, 2, ',', '.') }}</p>
@@ -169,14 +189,62 @@
                             <span class="font-bold text-primary-500 text-lg">R$ {{ number_format($total, 2, ',', '.') }}</span>
                         </div>
 
-                        <div class="flex space-x-2">
-                            <a href="{{ route('carrinho.limpar') }}" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-center transition-colors duration-200">
-                                <i class="fas fa-trash mr-2"></i>Limpar
-                            </a>
-                            <button onclick="finalizarPedido()" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg transition-colors duration-200">
-                                <i class="fas fa-check mr-2"></i>Finalizar
-                            </button>
-                        </div>
+                        <form action="{{ route('pedidos.finalizar') }}" method="POST" class="space-y-4">
+                            @csrf
+
+                            <!-- Nome do Cliente -->
+                            <div>
+                                <label for="nome_cliente" class="block text-sm font-medium text-gray-300 mb-1">Nome:</label>
+                                <input type="text" name="nome_cliente" id="nome_cliente" value="{{ old('nome_cliente', auth()->user()->name) }}" required
+                                       class="w-full px-3 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                                       style="background-color:#222222; border:1px solid #333333;">
+                            </div>
+
+                            <!-- Telefone do Cliente -->
+                            <div>
+                                <label for="telefone_cliente" class="block text-sm font-medium text-gray-300 mb-1">Telefone:</label>
+                                <input type="text" name="telefone_cliente" id="telefone_cliente" value="{{ old('telefone_cliente', auth()->user()->telefone) }}" required
+                                       class="w-full px-3 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                                       style="background-color:#222222; border:1px solid #333333;"
+                                       placeholder="(DD) XXXXX-XXXX">
+                            </div>
+
+                            <!-- Endereço de Entrega -->
+                            <div>
+                                <label for="endereco_entrega" class="block text-sm font-medium text-gray-300 mb-1">Endereço de Entrega:</label>
+                                <input type="text" name="endereco_entrega" id="endereco_entrega" value="{{ old('endereco_entrega') }}" required
+                                       class="w-full px-3 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                                       style="background-color:#222222; border:1px solid #333333;"
+                                       placeholder="Rua, Número, Bairro, Cidade-UF">
+                            </div>
+
+                            <!-- Horário de Entrega -->
+                            <div>
+                                <label for="horario_entrega" class="block text-sm font-medium text-gray-300 mb-1">Horário de Entrega:</label>
+                                <input type="text" name="horario_entrega" id="horario_entrega" value="{{ old('horario_entrega') }}" required
+                                       class="w-full px-3 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                                       style="background-color:#222222; border:1px solid #333333;"
+                                       placeholder="Ex: 19:00 - 20:00">
+                            </div>
+
+                            <!-- Observações (Opcional) -->
+                            <div>
+                                <label for="observacoes" class="block text-sm font-medium text-gray-300 mb-1">Observações (opcional):</label>
+                                <textarea name="observacoes" id="observacoes" rows="2"
+                                          class="w-full px-3 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 resize-none"
+                                          style="background-color:#222222; border:1px solid #333333;"
+                                          placeholder="Ex: Sem cebola, entregar no vizinho.">{{ old('observacoes') }}</textarea>
+                            </div>
+
+                            <div class="flex space-x-2">
+                                <a href="{{ route('carrinho.limpar') }}" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-center transition-colors duration-200">
+                                    <i class="fas fa-trash mr-2"></i>Limpar
+                                </a>
+                                <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg transition-colors duration-200">
+                                    <i class="fas fa-check mr-2"></i>Finalizar Pedido
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 @else
                     <div class="text-center py-8">
@@ -205,10 +273,6 @@
         function toggleUserMenu() {
             const menu = document.getElementById('userMenu');
             menu.classList.toggle('hidden');
-        }
-
-        function finalizarPedido() {
-            alert('Funcionalidade de finalização de pedido será implementada em breve!');
         }
 
         // Fechar menus ao clicar fora

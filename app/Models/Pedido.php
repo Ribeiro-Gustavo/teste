@@ -11,10 +11,13 @@ class Pedido extends Model
 
     protected $fillable = [
         'user_id',
-        'status',
-        'valor_total',
+        'nome_cliente',
+        'telefone_cliente',
         'endereco_entrega',
-        'observacoes'
+        'horario_entrega',
+        'observacoes',
+        'status',
+        'total',
     ];
 
     public function user()
@@ -22,7 +25,7 @@ class Pedido extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function itens()
+    public function items()
     {
         return $this->hasMany(PedidoItem::class);
     }

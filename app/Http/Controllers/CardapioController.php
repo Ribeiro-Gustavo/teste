@@ -26,7 +26,7 @@ class CardapioController extends Controller
             'nome' => 'required|string|min:2|max:25',
             'quantidade' => 'required|integer|min:0|max:9999',
             'validade' => 'nullable|date',
-            'preco' => 'required|numeric|min:0.01|max:9999.99',
+            'preco' => 'required|numeric|min:0.01|max:9999.99|regex:/^\d+(\.\d{1,2})?$/',
             'descricao' => 'required|string|min:5|max:125',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -53,7 +53,7 @@ class CardapioController extends Controller
             'nome' => 'required|string|min:2|max:25',
             'quantidade' => 'required|integer|min:0|max:9999',
             'validade' => 'nullable|date',
-            'preco' => 'required|numeric|min:0.01|max:9999.99',
+            'preco' => 'required|numeric|min:0.01|max:9999.99|regex:/^\d+(\.\d{1,2})?$/',
             'descricao' => 'required|string|min:5|max:125',
             'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
