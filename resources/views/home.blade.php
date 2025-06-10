@@ -17,7 +17,7 @@
                 Sem imagem
             </div>
         @endif
-        
+
         <h3 style="margin: 15px 0 10px;">{{ $cardapio->nome }}</h3>
         <p style="min-height: 60px;">{{ $cardapio->descricao }}</p>
         <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">R$ {{ number_format($cardapio->preco, 2, ',', '.') }}</p>
