@@ -18,7 +18,7 @@
     <!-- Dashboard Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <div class="rounded-xl p-6 border" style="background-color:#181818; border:1px solid #222222;">
                 <div class="flex items-center">
                     <div class="bg-primary-600 p-3 rounded-lg">
@@ -51,18 +51,6 @@
                     <div class="ml-4">
                         <p class="text-sm" style="color:#bdbdbd;">Usuários</p>
                         <p class="text-2xl font-bold text-white">{{ \App\Models\User::count() }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="rounded-xl p-6 border" style="background-color:#181818; border:1px solid #222222;">
-                <div class="flex items-center">
-                    <div class="bg-purple-600 p-3 rounded-lg">
-                        <i class="fas fa-star text-white text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm" style="color:#bdbdbd;">Avaliação</p>
-                        <p class="text-2xl font-bold text-white">4.8</p>
                     </div>
                 </div>
             </div>

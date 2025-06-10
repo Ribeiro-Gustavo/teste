@@ -23,11 +23,11 @@ class CardapioController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nome' => 'required|string|max:25',
-            'quantidade' => 'required|integer|min:0',
+            'nome' => 'required|string|min:2|max:25',
+            'quantidade' => 'required|integer|min:0|max:9999',
             'validade' => 'nullable|date',
-            'preco' => 'required|numeric|min:0',
-            'descricao' => 'required|string|max:125',
+            'preco' => 'required|numeric|min:0.01|max:9999.99',
+            'descricao' => 'required|string|min:5|max:125',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -50,11 +50,11 @@ class CardapioController extends Controller
     {
         $cardapio = Cardapio::findOrFail($id);
         $validatedData = $request->validate([
-            'nome' => 'required|string|max:25',
-            'quantidade' => 'required|integer|min:0',
+            'nome' => 'required|string|min:2|max:25',
+            'quantidade' => 'required|integer|min:0|max:9999',
             'validade' => 'nullable|date',
-            'preco' => 'required|numeric|min:0',
-            'descricao' => 'required|string|max:125',
+            'preco' => 'required|numeric|min:0.01|max:9999.99',
+            'descricao' => 'required|string|min:5|max:125',
             'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 

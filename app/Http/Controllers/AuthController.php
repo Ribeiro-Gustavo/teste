@@ -56,7 +56,11 @@ class AuthController extends Controller
             'name'                  => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'email', 'max:255', 'unique:users,email'],
             'password'              => ['required', 'string', 'min:6', 'confirmed'],
+            'telefone'              => ['required', 'string', 'min:10', 'max:20', 'regex:/^[\d\s\(\)\-+\.]+$/'],
         ]);
+
+        // adiciona telefone ao array de dados
+        $data['telefone'] = $request->input('telefone');
 
         // cria e já criptografa a senha (cast 'hashed' no Model)
         $user = User::create($data);

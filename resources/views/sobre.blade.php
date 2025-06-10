@@ -20,9 +20,7 @@
         <div class="rounded-2xl shadow-2xl overflow-hidden border" style="background-color:#181818; border:1px solid #222222;">
             <div class="p-8 md:p-12">
                 <div class="text-center mb-8">
-                    <div class="w-24 h-24 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-hamburger text-3xl text-white"></i>
-                    </div>
+                    <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-24 w-auto mx-auto mb-4 object-contain">
                     <h2 class="text-3xl font-bold text-white mb-4">Gusta's Burguer</h2>
                 </div>
 
@@ -65,7 +63,7 @@
     </div>
 
     <!-- Social Media Section -->
-    <div class="bg-gray-800 py-16 border-t border-gray-700">
+    <div class="py-16 border-t border-gray-700" style="background-color:#181818;">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold text-white mb-4">Conecte-se Conosco</h2>
             <p class="text-gray-400 mb-8 text-lg">
@@ -76,21 +74,21 @@
                 <a href="https://www.instagram.com/seu_usuario_instagram"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200" style="background: linear-gradient(90deg, #a259ff 0%, #ff6ec4 100%);">
+                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200 bg-primary-600 group-hover:bg-primary-700">
                     <i class="fab fa-instagram text-2xl text-white"></i>
                 </a>
 
                 <a href="https://www.facebook.com/seu_usuario_facebook"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200" style="background: linear-gradient(90deg, #a259ff 0%, #ff6ec4 100%);">
+                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200 bg-primary-600 group-hover:bg-primary-700">
                     <i class="fab fa-facebook-f text-2xl text-white"></i>
                 </a>
 
                 <a href="https://wa.me/5511999999999"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200" style="background: linear-gradient(90deg, #a259ff 0%, #ff6ec4 100%);">
+                   class="group p-4 rounded-full hover:scale-110 transition-transform duration-200 bg-primary-600 group-hover:bg-primary-700">
                     <i class="fab fa-whatsapp text-2xl text-white"></i>
                 </a>
             </div>

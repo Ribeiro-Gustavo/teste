@@ -22,14 +22,18 @@
                             800: '#9a3412',
                             900: '#7c2d12',
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="min-h-screen" style="background-color:#111111; color:#e5e5e5;">
+<body class="min-h-screen font-sans" style="background-color:#111111; color:#e5e5e5;">
     <!-- Header -->
     <header class="shadow-lg border-b" style="background-color:#181818; border-bottom:1px solid #222222;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +43,7 @@
                         <button onclick="toggleSidebar()" style="color:#bdbdbd;" class="hover:text-white focus:outline-none focus:text-white transition-colors duration-200">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <h1 class="text-xl font-bold text-primary-500">Gusta's Burguer</h1>
+                        <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -82,7 +86,12 @@
 
                 @guest
                     <div class="flex items-center space-x-4">
-                        <h1 class="text-xl font-bold text-primary-500">Gusta's Burguer</h1>
+                        <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-10 w-auto object-contain">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ route('login') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Entrar
+                        </a>
                     </div>
                 @endguest
             </div>

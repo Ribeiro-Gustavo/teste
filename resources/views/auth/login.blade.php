@@ -1,18 +1,32 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #111111 100%);">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Para campos preenchidos automaticamente */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px #222222 inset !important; /* Cor de fundo dos inputs */
+            -webkit-text-fill-color: #ffffff !important; /* Cor do texto */
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color:#111111;">
     <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
-            <div class="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                <i class="fas fa-hamburger text-3xl text-white"></i>
-            </div>
+            <img src="{{ asset('images/gusta_logo.png') }}" alt="Gusta's Burguer Logo" class="h-24 w-auto mx-auto mb-6 object-contain">
             <h2 class="text-4xl font-bold text-white mb-2">Bem-vindo de volta!</h2>
             <p class="text-gray-400 text-lg">Entre na sua conta para continuar</p>
         </div>
 
-        <!-- Error Messages - MANTENDO A LÓGICA ORIGINAL -->
+        <!-- Error Messages -->
         @if($errors->any())
             <div class="bg-red-600 border border-red-500 text-white px-4 py-3 rounded-lg shadow-lg">
                 <div class="flex items-center">
@@ -22,13 +36,13 @@
             </div>
         @endif
 
-        <!-- Login Form - MANTENDO EXATAMENTE A MESMA FUNCIONALIDADE -->
-        <div class="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
+        <!-- Login Form -->
+        <div class="rounded-2xl shadow-2xl overflow-hidden" style="background-color:#181818; border:1px solid #222222;">
             <div class="p-8">
                 <form action="{{ route('login') }}" method="POST" class="space-y-6">
                     @csrf
 
-                    <!-- Email Field - MANTENDO name, value e required originais -->
+                    <!-- Email Field -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
                             <i class="fas fa-envelope mr-2 text-primary-500"></i>E-mail
@@ -37,11 +51,12 @@
                                name="email"
                                value="{{ old('email') }}"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                               class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                               style="background-color:#222222; border:1px solid #333333;"
                                placeholder="E-mail">
                     </div>
 
-                    <!-- Password Field - MANTENDO name e required originais -->
+                    <!-- Password Field -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
                             <i class="fas fa-lock mr-2 text-primary-500"></i>Senha
@@ -49,24 +64,28 @@
                         <input type="password"
                                name="password"
                                required
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                               class="w-full px-4 py-3 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                               style="background-color:#222222; border:1px solid #333333;"
                                placeholder="Senha">
                     </div>
 
-                    <!-- Submit Button - MANTENDO type="submit" original -->
-                    <button type="submit"
-                            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Entrar</span>
-                    </button>
-                </form>
-            </div>
-        </div>
+                    <!-- Buttons -->
+                    <div class="flex flex-col space-y-3">
+                        <button type="submit"
+                                class="w-full text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                                style="background-color:#f97316; hover:background-color:#ea580c;">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Entrar</span>
+                        </button>
 
-        <!-- Register Link - MANTENDO route original -->
-        <div class="text-center">
-            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                <p class="text-gray-400 mb-4">Não tem conta? <a href="{{ route('register') }}" class="text-primary-400 hover:text-primary-300 transition-colors duration-200">Crie uma agora</a></p>
+                        <a href="{{ route('register') }}"
+                           class="w-full text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                           style="background-color:#222222; hover:background-color:#333333;">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Criar Conta</span>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
