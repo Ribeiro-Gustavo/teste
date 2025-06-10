@@ -6,6 +6,7 @@ use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\CarrinhoController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\DashboardController;
 
 // Rotas públicas de autenticação
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
@@ -23,9 +24,7 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 // Rota protegida de dashboard
-Route::get('/dashboard', function () {
-    return view('dashboard'); // Crie esse Blade se quiser
-})->middleware('auth')->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 // Rotas protegidas do CardapioController
 Route::middleware('auth')->group(function () {
@@ -39,9 +38,9 @@ Route::middleware('auth')->group(function () {
 
 // Carrinho (RESTful para testes e AJAX)
 Route::middleware('auth')->group(function () {
-    Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar']);
-    Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover']);
-    Route::delete('/carrinho/limpar', [CarrinhoController::class, 'limpar']);
+    Route::post('/carrinho/adicionar/{id?}', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+    Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
+    Route::delete('/carrinho/limpar', [CarrinhoController::class, 'limpar'])->name('carrinho.limpar');
 });
 
 // Perfil

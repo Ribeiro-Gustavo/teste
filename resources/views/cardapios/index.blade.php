@@ -78,6 +78,7 @@
                             <!-- Add to Cart -->
                             <form action="{{ route('carrinho.adicionar', $cardapio->id) }}" method="POST" class="mt-2">
                                 @csrf
+                                <input type="hidden" name="quantidade" value="1">
                                 <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-1">
                                     <i class="fas fa-cart-plus"></i>
                                     <span>Adicionar ao Carrinho</span>

@@ -26,7 +26,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm" style="color:#bdbdbd;">Total de Produtos</p>
-                        <p class="text-2xl font-bold text-white">{{ \App\Models\Cardapio::count() }}</p>
+                        <p class="text-2xl font-bold text-white">{{ $totalProdutos }}</p>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm" style="color:#bdbdbd;">Itens no Carrinho</p>
-                        <p class="text-2xl font-bold text-white">{{ array_sum(array_column(session('carrinho', []), 'quantidade')) }}</p>
+                        <p class="text-2xl font-bold text-white">{{ $itensCarrinho }}</p>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm" style="color:#bdbdbd;">Usuários</p>
-                        <p class="text-2xl font-bold text-white">{{ \App\Models\User::count() }}</p>
+                        <p class="text-2xl font-bold text-white">{{ $totalUsuarios }}</p>
                     </div>
                 </div>
             </div>

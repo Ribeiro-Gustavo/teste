@@ -8,38 +8,54 @@ use Illuminate\Support\Facades\Validator;
 
 class CarrinhoController extends Controller
 {
-    // Adiciona item ao carrinho (JSON)
-    public function adicionar(Request $request)
+    // Adiciona item ao carrinho (JSON ou Form)
+    public function adicionar(Request $request, $id = null)
     {
-        $validator = Validator::make($request->all(), [
+        // Se o ID vier da URL, usa ele
+        $cardapio_id = $id ?? $request->input('cardapio_id');
+        $quantidade = $request->input('quantidade', 1);
+
+        $validator = Validator::make([
+            'cardapio_id' => $cardapio_id,
+            'quantidade' => $quantidade
+        ], [
             'cardapio_id' => 'required|exists:cardapios,id',
             'quantidade' => 'required|integer|min:1',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return back()->withErrors($validator)->withInput();
         }
 
-        $data = $validator->validated();
-        $cardapio = Cardapio::find($data['cardapio_id']);
+        $cardapio = Cardapio::find($cardapio_id);
 
-        if ($data['quantidade'] > $cardapio->quantidade) {
-            return response()->json(['errors' => ['quantidade' => ['Quantidade maior que o estoque']]], 422);
+        if ($quantidade > $cardapio->quantidade) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => ['quantidade' => ['Quantidade maior que o estoque']]], 422);
+            }
+            return back()->withErrors(['quantidade' => 'Quantidade maior que o estoque'])->withInput();
         }
 
         $carrinho = session()->get('carrinho', []);
         if (isset($carrinho[$cardapio->id])) {
-            $carrinho[$cardapio->id]['quantidade'] += $data['quantidade'];
+            $carrinho[$cardapio->id]['quantidade'] += $quantidade;
         } else {
             $carrinho[$cardapio->id] = [
                 'nome' => $cardapio->nome,
-                'quantidade' => $data['quantidade'],
+                'quantidade' => $quantidade,
                 'validade' => $cardapio->validade,
                 'preco' => $cardapio->preco,
             ];
         }
         session()->put('carrinho', $carrinho);
-        return response()->json(['message' => 'Item adicionado ao carrinho'], 200);
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Item adicionado ao carrinho'], 200);
+        }
+        return back()->with('sucesso', 'Item adicionado ao carrinho');
     }
 
     // Remove item do carrinho (JSON)
