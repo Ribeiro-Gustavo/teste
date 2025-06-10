@@ -4,57 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cardapio;
+use Illuminate\Support\Facades\Validator;
 
 class CarrinhoController extends Controller
 {
-    public function adicionar(Request $request, $id)
+    // Adiciona item ao carrinho (JSON)
+    public function adicionar(Request $request)
     {
-        $cardapio = Cardapio::findOrFail($id);
-        $carrinho = session()->get('carrinho', []);
+        $validator = Validator::make($request->all(), [
+            'cardapio_id' => 'required|exists:cardapios,id',
+            'quantidade' => 'required|integer|min:1',
+        ]);
 
-        if (isset($carrinho[$id])) {
-            $carrinho[$id]['quantidade']++;
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = $validator->validated();
+        $cardapio = Cardapio::find($data['cardapio_id']);
+
+        if ($data['quantidade'] > $cardapio->quantidade) {
+            return response()->json(['errors' => ['quantidade' => ['Quantidade maior que o estoque']]], 422);
+        }
+
+        $carrinho = session()->get('carrinho', []);
+        if (isset($carrinho[$cardapio->id])) {
+            $carrinho[$cardapio->id]['quantidade'] += $data['quantidade'];
         } else {
-            $carrinho[$id] = [
+            $carrinho[$cardapio->id] = [
                 'nome' => $cardapio->nome,
-                'quantidade' => 1,
+                'quantidade' => $data['quantidade'],
                 'validade' => $cardapio->validade,
                 'preco' => $cardapio->preco,
             ];
         }
-
         session()->put('carrinho', $carrinho);
-        return back()->with('sucesso', 'Item adicionado ao carrinho!');
+        return response()->json(['message' => 'Item adicionado ao carrinho'], 200);
     }
 
-    public function mostrar()
+    // Remove item do carrinho (JSON)
+    public function remover($id)
     {
         $carrinho = session()->get('carrinho', []);
-        return view('carrinho.modal', compact('carrinho'));
-    }
-
-public function remover(Request $request, $id)
-{
-    $carrinho = session()->get('carrinho', []);
-
-    if (isset($carrinho[$id])) {
-        $quantidadeRemover = (int) $request->input('quantidade', 1);
-
-        if ($carrinho[$id]['quantidade'] > $quantidadeRemover) {
-            $carrinho[$id]['quantidade'] -= $quantidadeRemover;
-        } else {
+        if (isset($carrinho[$id])) {
             unset($carrinho[$id]);
+            session()->put('carrinho', $carrinho);
+            return response()->json(['message' => 'Item removido do carrinho'], 200);
         }
-
-        session()->put('carrinho', $carrinho);
+        return response()->json(['errors' => ['item' => ['Item não encontrado no carrinho']]], 404);
     }
 
-    return back()->with('sucesso', 'Item atualizado no carrinho.');
-}
-
+    // Limpa o carrinho (JSON)
     public function limpar()
     {
         session()->forget('carrinho');
-        return back()->with('sucesso', 'Carrinho limpo!');
+        return response()->json(['message' => 'Carrinho limpo com sucesso'], 200);
     }
 }

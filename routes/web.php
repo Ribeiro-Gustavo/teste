@@ -22,13 +22,6 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register']);
 
-// carrinho
-Route::post('/carrinho/adicionar/{id}', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
-Route::get('/carrinho', [CarrinhoController::class, 'mostrar'])->name('carrinho.mostrar');
-Route::post('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
-Route::post('/carrinho/limpar', [CarrinhoController::class, 'limpar'])->name('carrinho.limpar');
-
-
 // Rota protegida de dashboard
 Route::get('/dashboard', function () {
     return view('dashboard'); // Crie esse Blade se quiser
@@ -42,29 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/cardapios/{cardapio}/edit', [CardapioController::class, 'edit'])->name('cardapios.edit');
     Route::put('/cardapios/{cardapio}', [CardapioController::class, 'update'])->name('cardapios.update');
     Route::delete('/cardapios/{cardapio}', [CardapioController::class, 'destroy'])->name('cardapios.destroy');
-
-    // Rotas de Pedidos (Finalização) - Processadas via modal agora
-    Route::post('/pedidos/finalizar', [PedidoController::class, 'processOrder'])->name('pedidos.finalizar');
-    Route::get('/pedidos/confirmacao/{pedido}', [PedidoController::class, 'showOrderConfirmation'])->name('pedidos.confirmacao');
 });
 
-// Carrinho
+// Carrinho (RESTful para testes e AJAX)
 Route::middleware('auth')->group(function () {
-    Route::post('/carrinho/adicionar', function(Request $request) {
-        return response()->json(['message' => 'Item adicionado ao carrinho'], 200);
-    });
-    Route::delete('/carrinho/remover/{id}', function($id) {
-        return response()->json(['message' => 'Item removido do carrinho'], 200);
-    });
-    Route::put('/carrinho/atualizar', function(Request $request) {
-        return response()->json(['message' => 'Quantidade atualizada'], 200);
-    });
-    Route::delete('/carrinho/limpar', function() {
-        return response()->json(['message' => 'Carrinho limpo com sucesso'], 200);
-    });
-    Route::get('/carrinho', function() {
-        return response()->json(['itens' => []], 200);
-    });
+    Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar']);
+    Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover']);
+    Route::delete('/carrinho/limpar', [CarrinhoController::class, 'limpar']);
 });
 
 // Perfil
@@ -91,24 +68,10 @@ Route::middleware('auth')->group(function () {
 
 // Pedidos
 Route::middleware('auth')->group(function () {
-    Route::post('/pedidos', function(Request $request) {
-        if (empty($request->input('itens'))) {
-            return response()->json(['errors' => ['itens' => ['Itens obrigatórios']]], 422);
-        }
-        return response()->json(['message' => 'Pedido criado com sucesso'], 201);
-    });
-    Route::get('/pedidos', function() {
-        return response()->json(['data' => [[], [], []]], 200);
-    });
-    Route::get('/pedidos/{id}', function($id) {
-        return response()->json(['data' => ['id' => $id]], 200);
-    });
-    Route::put('/pedidos/{id}/cancelar', function($id) {
-        if ($id == 999) {
-            return response()->json(['message' => 'Não é possível cancelar um pedido em preparo'], 403);
-        }
-        return response()->json(['message' => 'Pedido cancelado com sucesso'], 200);
-    });
+    Route::post('/pedidos/finalizar', [PedidoController::class, 'processOrder'])->name('pedidos.finalizar');
+    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
+    Route::get('/pedidos/{pedido}', [PedidoController::class, 'show'])->name('pedidos.show');
+    Route::put('/pedidos/{pedido}/cancelar', [PedidoController::class, 'cancel'])->name('pedidos.cancelar');
 });
 
 // Notificações

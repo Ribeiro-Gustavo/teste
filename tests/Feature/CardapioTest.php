@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -13,33 +12,34 @@ use App\Models\User;
 class CardapioTest extends TestCase
 {
     use RefreshDatabase;
-    use WithoutMiddleware;
+
+    protected $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
 
     public function test_pagina_cardapios_index_carrega_com_sucesso()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $this->actingAs($this->user);
         $response = $this->get('/cardapios');
         $response->assertStatus(200);
-        $response->assertSee('Cardápio'); // ajusta conforme o título da sua view
+        $response->assertSee('Cardápio');
     }
 
     public function test_pagina_criacao_carrega_com_sucesso()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $this->actingAs($this->user);
         $response = $this->get('/cardapios/create');
         $response->assertStatus(200);
-        $response->assertSee('Adicionar'); // ajusta conforme o conteúdo da view
+        $response->assertSee('Adicionar Produto');
     }
 
     public function test_cardapios_pode_ser_criado()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $this->actingAs($this->user);
         Storage::fake('public');
 
         $imagem = UploadedFile::fake()->image('hamburguer.jpg');
@@ -48,7 +48,7 @@ class CardapioTest extends TestCase
             'nome' => 'X-Burguer',
             'quantidade' => 10,
             'validade' => now()->addDays(7)->format('Y-m-d'),
-            'preco' => 19,
+            'preco' => 19.90,
             'descricao' => 'Delicioso hambúrguer artesanal',
             'imagem' => $imagem,
         ];
@@ -56,19 +56,40 @@ class CardapioTest extends TestCase
         $response = $this->post('/cardapios', $dados);
 
         $response->assertRedirect('/cardapios');
-        $this->assertDatabaseHas('cardapios', ['nome' => 'X-Burguer']);
+        $this->assertDatabaseHas('cardapios', [
+            'nome' => 'X-Burguer',
+            'quantidade' => 10,
+            'preco' => 19.90,
+            'descricao' => 'Delicioso hambúrguer artesanal'
+        ]);
         Storage::disk('public')->assertExists('cardapios/' . $imagem->hashName());
+    }
+
+    public function test_cardapios_nao_pode_ser_criado_com_dados_invalidos()
+    {
+        $this->actingAs($this->user);
+
+        $dados = [
+            'nome' => '', // Nome vazio
+            'quantidade' => -1, // Quantidade negativa
+            'preco' => 'abc', // Preço inválido
+            'descricao' => '', // Descrição vazia
+        ];
+
+        $response = $this->post('/cardapios', $dados);
+
+        $response->assertSessionHasErrors(['nome', 'quantidade', 'preco', 'descricao']);
+        $this->assertDatabaseMissing('cardapios', ['nome' => '']);
     }
 
     public function test_cardapios_pode_ser_editado()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $this->actingAs($this->user);
         Storage::fake('public');
 
         $cardapio = Cardapio::factory()->create([
-            'imagem' => 'cardapios/old.jpg',
+            'nome' => 'X-Burguer Original',
+            'preco' => 19.90,
         ]);
 
         $novaImagem = UploadedFile::fake()->image('novo.jpg');
@@ -77,25 +98,27 @@ class CardapioTest extends TestCase
             'nome' => 'X-Tudo',
             'quantidade' => 5,
             'validade' => now()->addDays(3)->format('Y-m-d'),
-            'preco' => 25.00,
-            'descricao' => 'Atualizado',
+            'preco' => 25.90,
+            'descricao' => 'Hambúrguer atualizado',
             'imagem' => $novaImagem,
         ];
 
         $response = $this->put("/cardapios/{$cardapio->id}", $dados);
 
         $response->assertRedirect('/cardapios');
-
-        $updatedCardapio = Cardapio::find($cardapio->id);
-        $this->assertEquals('X-Tudo', $updatedCardapio->nome);
+        $this->assertDatabaseHas('cardapios', [
+            'id' => $cardapio->id,
+            'nome' => 'X-Tudo',
+            'quantidade' => 5,
+            'preco' => 25.90,
+            'descricao' => 'Hambúrguer atualizado'
+        ]);
         Storage::disk('public')->assertExists('cardapios/' . $novaImagem->hashName());
     }
 
     public function test_cardapios_pode_ser_removido()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $this->actingAs($this->user);
         Storage::fake('public');
 
         $imagem = UploadedFile::fake()->image('delete.jpg')->store('cardapios', 'public');
@@ -111,4 +134,22 @@ class CardapioTest extends TestCase
         Storage::disk('public')->assertMissing($imagem);
     }
 
+    public function test_usuario_nao_autenticado_nao_pode_acessar_cardapio()
+    {
+        $response = $this->get('/cardapios');
+        $response->assertRedirect('/login');
+    }
+
+    public function test_usuario_nao_autenticado_nao_pode_criar_cardapio()
+    {
+        $response = $this->get('/cardapios/create');
+        $response->assertRedirect('/login');
+    }
+
+    public function test_usuario_nao_autenticado_nao_pode_editar_cardapio()
+    {
+        $cardapio = Cardapio::factory()->create();
+        $response = $this->get("/cardapios/{$cardapio->id}/edit");
+        $response->assertRedirect('/login');
+    }
 }
