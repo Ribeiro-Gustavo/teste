@@ -46,8 +46,9 @@ class CardapioController extends Controller
         return view('cardapios.edit', compact('cardapio'));
     }
 
-    public function update(Request $request, Cardapio $cardapio)
+    public function update(Request $request, $id)
     {
+        $cardapio = Cardapio::findOrFail($id);
         $validatedData = $request->validate([
             'nome' => 'required|string|max:25',
             'quantidade' => 'required|integer|min:0',
@@ -71,8 +72,9 @@ class CardapioController extends Controller
         return redirect()->route('cardapios.index')->with('sucesso', 'Cardápio atualizado!');
     }
 
-    public function destroy(Cardapio $cardapio)
+    public function destroy($id)
     {
+        $cardapio = Cardapio::findOrFail($id);
         // Apaga a imagem associada antes de deletar o cardápio
         if ($cardapio->imagem && \Storage::disk('public')->exists($cardapio->imagem)) {
             \Storage::disk('public')->delete($cardapio->imagem);

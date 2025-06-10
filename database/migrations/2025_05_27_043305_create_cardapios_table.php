@@ -12,6 +12,7 @@ class CreateCardapiosTable extends Migration
             $table->id();
             $table->string('nome', 25);
             $table->integer('quantidade')->unsigned();
+            $table->date('validade')->nullable();
             $table->decimal('preco', 8, 2)->unsigned();
             $table->string('descricao', 125);
             $table->string('imagem');
