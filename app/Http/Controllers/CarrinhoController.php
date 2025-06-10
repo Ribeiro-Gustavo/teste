@@ -19,6 +19,7 @@ class CarrinhoController extends Controller
                 'nome' => $cardapio->nome,
                 'quantidade' => 1,
                 'validade' => $cardapio->validade,
+                'preco' => $cardapio->preco,
             ];
         }
 

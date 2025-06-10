@@ -31,9 +31,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-900 text-white">
+<body style="background-color:#111111; color:#e5e5e5;">
     <!-- Header -->
-    <header class="bg-gray-800 shadow-lg border-b border-gray-700">
+    <header class="shadow-lg border-b" style="background-color:#181818; border-bottom:1px solid #222222;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
@@ -49,7 +49,7 @@
                             </a>
                         @else
                             <a href="{{ route('login') }}"
-                                class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200" style="color:#bdbdbd;">
                                 <i class="fas fa-sign-in-alt mr-2"></i>Entrar
                             </a>
 
@@ -68,7 +68,7 @@
 
     <!-- Hero Section -->
     <div
-        class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-primary-900">
+        class="relative min-h-screen flex items-center justify-center" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #f97316 100%);">
         <div class="absolute inset-0 bg-black opacity-50"></div>
 
         <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -86,7 +86,7 @@
                 <br>Burguer
             </h1>
 
-            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" style="color:#bdbdbd;">
                 Hambúrgueres artesanais feitos com amor, ingredientes frescos e muito sabor.
                 Uma experiência gastronômica única que começou na cozinha de casa.
             </p>
@@ -99,7 +99,7 @@
                         <i class="fas fa-utensils mr-2"></i>Ver Cardápio
                     </a>
                     <a href="{{ route('dashboard') }}"
-                        class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200">
+                        class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200" style="color:#e5e5e5; border-color:#e5e5e5;">
                         <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                     </a>
                 @else
@@ -108,7 +108,7 @@
                         <i class="fas fa-sign-in-alt mr-2"></i>Entrar
                     </a>
                     <a href="{{ route('register') }}"
-                        class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200">
+                        class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200" style="color:#e5e5e5; border-color:#e5e5e5;">
                         <i class="fas fa-user-plus mr-2"></i>Criar Conta
                     </a>
                 @endauth
@@ -121,7 +121,7 @@
                         <i class="fas fa-leaf text-2xl text-white"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Ingredientes Frescos</h3>
-                    <p class="text-gray-400">Selecionamos os melhores ingredientes para garantir qualidade e sabor
+                    <p style="color:#bdbdbd;">Selecionamos os melhores ingredientes para garantir qualidade e sabor
                         únicos.</p>
                 </div>
 
@@ -130,7 +130,7 @@
                         <i class="fas fa-heart text-2xl text-white"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Feito com Amor</h3>
-                    <p class="text-gray-400">Cada hambúrguer é preparado artesanalmente com muito carinho e atenção aos
+                    <p style="color:#bdbdbd;">Cada hambúrguer é preparado artesanalmente com muito carinho e atenção aos
                         detalhes.</p>
                 </div>
 
@@ -139,7 +139,7 @@
                         <i class="fas fa-clock text-2xl text-white"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Entrega Rápida</h3>
-                    <p class="text-gray-400">Preparamos seu pedido com agilidade para que você receba sempre fresquinho.
+                    <p style="color:#bdbdbd;">Preparamos seu pedido com agilidade para que você receba sempre fresquinho.
                     </p>
                 </div>
             </div>
@@ -152,11 +152,11 @@
     </div>
 
     <!-- About Section -->
-    <div class="bg-gray-800 py-16">
+    <div class="py-16" style="background-color:#181818;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-white mb-4">Nossa História</h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                <p class="text-xl max-w-3xl mx-auto" style="color:#bdbdbd;">
                     Tudo começou na cozinha de casa do Gustavo, um jovem empreendedor apaixonado por gastronomia
                     e com um sonho: trazer hambúrgueres artesanais de alta qualidade feitos com amor e atenção aos
                     detalhes.
@@ -166,11 +166,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
                     <h3 class="text-2xl font-bold text-white mb-4">Qualidade em Cada Detalhe</h3>
-                    <p class="text-gray-400 mb-6">
+                    <p class="mb-6" style="color:#bdbdbd;">
                         Aqui, cada hambúrguer é preparado artesanalmente, com ingredientes frescos e selecionados,
                         buscando sempre aquele sabor único que só a comida feita com cuidado pode proporcionar.
                     </p>
-                    <p class="text-gray-400">
+                    <p style="color:#bdbdbd;">
                         Nosso compromisso é com a qualidade, o sabor e o carinho em cada etapa do processo.
                         Mais do que uma hamburgueria, somos um lugar onde tradição e inovação se encontram para criar
                         algo especial.
@@ -180,19 +180,19 @@
                 <div class="bg-gray-700 rounded-xl p-8">
                     <h4 class="text-xl font-semibold text-white mb-4">Nossos Valores</h4>
                     <ul class="space-y-3">
-                        <li class="flex items-center text-gray-300">
+                        <li class="flex items-center" style="color:#bdbdbd;">
                             <i class="fas fa-check text-primary-500 mr-3"></i>
                             Ingredientes frescos e selecionados
                         </li>
-                        <li class="flex items-center text-gray-300">
+                        <li class="flex items-center" style="color:#bdbdbd;">
                             <i class="fas fa-check text-primary-500 mr-3"></i>
                             Preparação artesanal
                         </li>
-                        <li class="flex items-center text-gray-300">
+                        <li class="flex items-center" style="color:#bdbdbd;">
                             <i class="fas fa-check text-primary-500 mr-3"></i>
                             Atendimento personalizado
                         </li>
-                        <li class="flex items-center text-gray-300">
+                        <li class="flex items-center" style="color:#bdbdbd;">
                             <i class="fas fa-check text-primary-500 mr-3"></i>
                             Compromisso com a qualidade
                         </li>
@@ -203,9 +203,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 py-8 border-t border-gray-700">
+    <footer class="py-8 border-t" style="background-color:#111111; border-top:1px solid #222222;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-gray-400">
+            <p style="color:#bdbdbd;">
                 &copy; {{ date('Y') }} Gusta's Burguer. Todos os direitos reservados.
             </p>
         </div>

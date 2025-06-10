@@ -1,9 +1,9 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
+<div class="min-h-screen" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #111111 100%);">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-primary-600 to-primary-800 py-12">
+    <div class="py-12" style="background: linear-gradient(90deg, #f97316 0%, #c2410c 100%);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div>
@@ -35,19 +35,19 @@
         @if($cardapios->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($cardapios as $cardapio)
-                    <div class="bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-700 hover:border-primary-500 transition-all duration-300">
+                    <div class="rounded-xl shadow-xl overflow-hidden border border-gray-700 hover:border-primary-500 transition-all duration-300" style="background-color:#181818;">
                         <!-- Image -->
-                        <div class="relative h-48 overflow-hidden">
+                        <div class="relative h-48 overflow-hidden flex items-center justify-center bg-black">
                             @if($cardapio->imagem)
                                 <img src="{{ asset('storage/' . $cardapio->imagem) }}"
                                      alt="{{ $cardapio->nome }}"
-                                     class="w-full h-full object-cover">
+                                     class="w-full h-full object-cover object-center rounded-t-xl transition-transform duration-300 hover:scale-105 shadow-md">
                             @else
-                                <div class="w-full h-full bg-gray-700 flex items-center justify-center">
-                                    <i class="fas fa-image text-4xl text-gray-500"></i>
+                                <div class="w-full h-full flex items-center justify-center" style="background-color:#222222;">
+                                    <i class="fas fa-image text-4xl" style="color:#757575;"></i>
                                 </div>
                             @endif
-                            <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                            <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded-full text-sm font-semibold shadow">
                                 R$ {{ number_format($cardapio->preco, 2, ',', '.') }}
                             </div>
                         </div>
@@ -60,7 +60,7 @@
 
                             <!-- Actions -->
                             <div class="flex space-x-2">
-                                <a href="{{ route('cardapios.edit', $cardapio) }}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-center transition-colors duration-200 flex items-center justify-center space-x-1">
+                                <a href="{{ route('cardapios.edit', $cardapio) }}" class="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 px-4 rounded-lg text-center transition-colors duration-200 flex items-center justify-center space-x-1">
                                     <i class="fas fa-edit"></i>
                                     <span>Editar</span>
                                 </a>

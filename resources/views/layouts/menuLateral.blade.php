@@ -29,14 +29,14 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
+<body class="min-h-screen" style="background-color:#111111; color:#e5e5e5;">
     <!-- Header -->
-    <header class="bg-gray-800 shadow-lg border-b border-gray-700">
+    <header class="shadow-lg border-b" style="background-color:#181818; border-bottom:1px solid #222222;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 @auth
                     <div class="flex items-center space-x-4">
-                        <button onclick="toggleSidebar()" class="text-gray-300 hover:text-white focus:outline-none focus:text-white transition-colors duration-200">
+                        <button onclick="toggleSidebar()" style="color:#bdbdbd;" class="hover:text-white focus:outline-none focus:text-white transition-colors duration-200">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
                         <h1 class="text-xl font-bold text-primary-500">Gusta's Burguer</h1>
@@ -44,7 +44,7 @@
 
                     <div class="flex items-center space-x-4">
                         <!-- Carrinho -->
-                        <button onclick="toggleCarrinhoModal()" class="relative text-gray-300 hover:text-primary-500 focus:outline-none transition-colors duration-200">
+                        <button onclick="toggleCarrinhoModal()" class="relative focus:outline-none transition-colors duration-200" style="color:#bdbdbd;">
                             <i class="fas fa-shopping-cart text-xl"></i>
                             @php
                                 $carrinho = session('carrinho', []);
@@ -59,19 +59,19 @@
 
                         <!-- User Menu -->
                         <div class="relative">
-                            <button onclick="toggleUserMenu()" class="flex items-center space-x-2 text-gray-300 hover:text-white focus:outline-none transition-colors duration-200">
+                            <button onclick="toggleUserMenu()" class="flex items-center space-x-2 focus:outline-none transition-colors duration-200" style="color:#bdbdbd;">
                                 <i class="fas fa-user-circle text-xl"></i>
                                 <span class="hidden md:block">{{ auth()->user()->name }}</span>
                                 <i class="fas fa-chevron-down text-sm"></i>
                             </button>
 
-                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
-                                <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-50 border" style="background-color:#181818; border:1px solid #222222;">
+                                <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm hover:text-white transition-colors duration-200" style="color:#bdbdbd;">
                                     <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
                                 <form action="{{ route('logout') }}" method="POST" class="block">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm hover:text-white transition-colors duration-200" style="color:#bdbdbd;">
                                         <i class="fas fa-sign-out-alt mr-2"></i>Sair
                                     </button>
                                 </form>
@@ -90,22 +90,22 @@
     </header>
 
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-gray-700">
-        <div class="flex items-center justify-between h-16 px-4 border-b border-gray-700">
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full transition-transform duration-300 ease-in-out border-r" style="background-color:#181818; border-right:1px solid #222222;">
+        <div class="flex items-center justify-between h-16 px-4 border-b" style="border-bottom:1px solid #222222;">
             <h2 class="text-lg font-semibold text-white">Menu</h2>
-            <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white focus:outline-none">
+            <button onclick="toggleSidebar()" class="hover:text-white focus:outline-none" style="color:#757575;">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
 
         <nav class="mt-4">
-            <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+            <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 hover:text-white transition-colors duration-200" style="color:#bdbdbd;">
                 <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
             </a>
-            <a href="{{ route('cardapios.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+            <a href="{{ route('cardapios.index') }}" class="flex items-center px-4 py-3 hover:text-white transition-colors duration-200" style="color:#bdbdbd;">
                 <i class="fas fa-utensils mr-3"></i>Cardápio
             </a>
-            <a href="{{ route('sobre') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+            <a href="{{ route('sobre') }}" class="flex items-center px-4 py-3 hover:text-white transition-colors duration-200" style="color:#bdbdbd;">
                 <i class="fas fa-info-circle mr-3"></i>Sobre
             </a>
         </nav>
@@ -121,12 +121,12 @@
 
     <!-- Modal do Carrinho -->
     <div id="carrinhoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-hidden border border-gray-700">
-            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+        <div class="rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-hidden border" style="background-color:#181818; border:1px solid #222222;">
+            <div class="flex items-center justify-between p-4 border-b" style="border-bottom:1px solid #222222;">
                 <h3 class="text-lg font-semibold text-white">
                     <i class="fas fa-shopping-cart mr-2 text-primary-500"></i>Carrinho
                 </h3>
-                <button onclick="toggleCarrinhoModal()" class="text-gray-400 hover:text-white focus:outline-none">
+                <button onclick="toggleCarrinhoModal()" class="hover:text-white focus:outline-none" style="color:#757575;">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
@@ -142,10 +142,10 @@
                                 $subtotal = $item['preco'] * $item['quantidade'];
                                 $total += $subtotal;
                             @endphp
-                            <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                            <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg" style="background-color:#222222;">
                                 <div class="flex-1">
                                     <h4 class="font-medium text-white">{{ $item['nome'] }}</h4>
-                                    <p class="text-sm text-gray-400">{{ $item['quantidade'] }}x - R$ {{ number_format($subtotal, 2, ',', '.') }}</p>
+                                    <p class="text-sm" style="color:#bdbdbd;">{{ $item['quantidade'] }}x - R$ {{ number_format($subtotal, 2, ',', '.') }}</p>
                                 </div>
                                 <a href="{{ route('carrinho.remover', $id) }}" class="text-red-400 hover:text-red-300 ml-2">
                                     <i class="fas fa-trash"></i>
@@ -154,7 +154,7 @@
                         @endforeach
                     </div>
 
-                    <div class="mt-4 pt-4 border-t border-gray-700">
+                    <div class="mt-4 pt-4 border-t" style="border-top:1px solid #222222;">
                         <div class="flex justify-between items-center mb-4">
                             <span class="font-semibold text-white">Total:</span>
                             <span class="font-bold text-primary-500 text-lg">R$ {{ number_format($total, 2, ',', '.') }}</span>
@@ -171,8 +171,8 @@
                     </div>
                 @else
                     <div class="text-center py-8">
-                        <i class="fas fa-shopping-cart text-4xl text-gray-600 mb-4"></i>
-                        <p class="text-gray-400">Carrinho vazio</p>
+                        <i class="fas fa-shopping-cart text-4xl mb-4" style="color:#757575;"></i>
+                        <p style="color:#bdbdbd;">Carrinho vazio</p>
                     </div>
                 @endif
             </div>

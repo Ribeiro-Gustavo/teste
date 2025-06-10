@@ -1,9 +1,9 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
+<div class="min-h-screen" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #111111 100%);">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-primary-600 to-primary-800 py-12">
+    <div class="py-12" style="background: linear-gradient(90deg, #f97316 0%, #c2410c 100%);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center space-x-4">
                 <a href="{{ route('cardapios.index') }}" class="text-white hover:text-primary-200 transition-colors duration-200">

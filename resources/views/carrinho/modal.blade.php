@@ -2,7 +2,7 @@
 <div id="carrinhoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden border border-gray-700">
         <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-primary-600 to-primary-700">
+        <div class="flex items-center justify-between p-6 border-b border-gray-700" style="background: linear-gradient(90deg, #f97316 0%, #c2410c 100%);">
             <h3 class="text-xl font-bold text-white flex items-center">
                 <i class="fas fa-shopping-cart mr-3"></i>
                 Itens no Carrinho
@@ -74,7 +74,7 @@
 <div id="finalizarPedidoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-60 flex items-center justify-center p-4">
     <div class="bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700">
         <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-green-600 to-green-700">
+        <div class="flex items-center justify-between p-6 border-b border-gray-700" style="background: linear-gradient(90deg, #16a34a 0%, #166534 100%);">
             <h3 class="text-xl font-bold text-white">Resumo do Pedido</h3>
             <!-- MANTENDO A FUNÇÃO fecharFinalizarPedidoModal() ORIGINAL -->
             <button onclick="fecharFinalizarPedidoModal()" class="text-white hover:text-gray-200 focus:outline-none transition-colors duration-200">

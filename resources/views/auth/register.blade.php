@@ -1,7 +1,7 @@
 @extends('layouts.menuLateral')
 
 @section('content')
-<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(135deg, #111111 0%, #181818 50%, #111111 100%);">
     <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
