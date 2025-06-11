@@ -9,7 +9,7 @@ use App\Models\User;
 class AuthController extends Controller
 {
     // Exibe o formulário de login
-    public function showLogin()
+    public function showLoginForm()
     {
         return view('auth.login');
     }
@@ -54,11 +54,11 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
     // exibe o form de registro
-    public function showRegister()
+    public function showRegistrationForm()
     {
         return view('auth.register');
     }
